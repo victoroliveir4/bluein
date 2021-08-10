@@ -1,0 +1,11 @@
+CREATE DATABASE IF NOT EXISTS bluein;
+USE bluein;
+
+CREATE TABLE IF NOT EXISTS user (
+  id INT(11) AUTO_INCREMENT,
+  name VARCHAR(255),
+  email VARCHAR(255),
+  password VARCHAR(255),
+  vote TINYINT(1),
+  PRIMARY KEY (id)
+);

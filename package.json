@@ -1,0 +1,26 @@
+{
+  "name": "bluein",
+  "version": "1.0.0",
+  "description": "Votação de Empreendimentos",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/victoroliveir4/bluein.git"
+  },
+  "keywords": [],
+  "author": "Victor de Oliveira",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/victoroliveir4/bluein/issues"
+  },
+  "homepage": "https://github.com/victoroliveir4/bluein#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.12"
+  }
+}
