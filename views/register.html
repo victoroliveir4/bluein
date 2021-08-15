@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="pt-br">
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--  CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css'>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css" type="text/css">
+
+    <title>Bluein - Cadastro</title>
+    </head>
+
+    <body class="text-center">
+        <form id="form" class="form-signup">
+            <h1 class="h3 mb-3 fw-normal">Sistema de Cadastro</h1>
+
+            <div id="alert" class="alert-hidden" role="alert">
+                Usuário cadastrado! <a href="/" class="alert-link">Clique aqui</a>. para efetuar login.
+            </div>
+            <div class="form-floating">
+                <input type="text" class="form-control" id="name" placeholder="Nome">
+                <label for="name">Nome</label>
+                <i class="fas fa-check-circle"></i>
+                <i class="fas fa-exclamation-circle"></i>
+                <small>Error message</small>
+            </div>
+            <div class="form-floating">
+                <input type="email" class="form-control" id="email" placeholder="E-mail">
+                <label for="email">E-mail</label>
+                <i class="fas fa-check-circle"></i>
+                <i class="fas fa-exclamation-circle"></i>
+                <small>Error message</small>
+            </div>
+            <div class="form-floating">
+                <input type="password" class="form-control" id="password" placeholder="Senha">
+                <label for="password">Senha</label>
+                <i class="fas fa-check-circle"></i>
+                <i class="fas fa-exclamation-circle"></i>
+                <small>Error message</small>
+            </div>
+            <div class="form-floating">
+                <input type="password" class="form-control" id="passwordConfirm" placeholder="Confirmar Senha">
+                <label for="passwordConfirm">Confirmar Senha</label>
+                <i class="fas fa-check-circle"></i>
+                <i class="fas fa-exclamation-circle"></i>
+                <small>Error message</small>
+            </div>
+
+            <button class="w-100 btn btn-lg btn-primary" style="margin-top: 20px;" type="submit">Cadastrar</button>
+            <p class="mt-5 mb-3 text-muted">&copy; 2021 - Bluein</p>
+        </form>
+    <script src="scripts/validator.js" type="module"></script>
+    </body>
+</html>

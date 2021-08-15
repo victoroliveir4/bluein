@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--  CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css" type="text/css">
+
+    <title>Bluein - Login</title>
+  </head>
+
+  <body class="text-center">
+    <main class="form-signin">
+      <form id="form">
+        <h1 class="h3 mb-3 fw-normal" style="padding-bottom: 20px;">Sistema de Login</h1>
+
+        <div id="alert" class="alert-hidden" role="alert">
+        </div>
+        <div class="form-floating">
+          <input type="email" class="form-control" id="email" placeholder="E-mail" autofocus>
+          <label for="email">E-mail</label>
+        </div>
+        <div class="form-floating">
+          <input type="password" class="form-control" id="password" placeholder="Senha">
+          <label for="password">Senha</label>
+        </div>
+
+        <div class="mb-3" style="padding-bottom: 10px;">
+          <a href="register">Não tem conta? Cadastre-se</a>
+        </div>
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Entrar</button>
+        <p class="mt-5 mb-3 text-muted">&copy; 2021 - Bluein</p>
+      </form>
+    </main>
+    <script src="scripts/login.js" type="module"></script>
+  </body>
+</html>

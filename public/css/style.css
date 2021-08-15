@@ -1,0 +1,99 @@
+html,
+
+body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #f5f5f5;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+}
+
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.form-signup {
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
+	padding: 30px 40px;
+}
+
+.form-control {
+	margin-bottom: 30px;
+	padding-bottom: 20px;
+	position: relative;
+}
+
+.form-floating.success input {
+	border-color: #2ecc71;
+}
+
+.form-floating.error input {
+	border-color: #e74c3c;
+}
+
+.form-floating i {
+  visibility: hidden;
+	position: absolute;
+	top: 20px;
+	right: -25px;
+}
+
+.form-floating.success i.fa-check-circle {
+	color: #2ecc71;
+	visibility: visible;
+}
+
+.form-floating.error i.fa-exclamation-circle {
+	color: #e74c3c;
+	visibility: visible;
+}
+
+.form-floating small {
+  visibility: hidden;
+	color: #e74c3c;
+	position: absolute;
+	bottom: -20px;
+	left: 5px;
+}
+
+.form-floating.error small {
+	visibility: visible;
+}
+
+.alert-visible {
+  visibility: visible;
+}
+
+.alert-hidden {
+  visibility: hidden;
+}
+
+.btn:focus {
+  outline: none;
+  box-shadow: none;
+}
