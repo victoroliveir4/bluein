@@ -26,6 +26,7 @@ function checkInputs() {
 		setSuccess(name);
 	}
 
+	console.log(usersEmail);
 	if(emailValue === '') {
 		setError(email, 'Digite seu e-mail');
 	} else if (!checkEmail(emailValue)) {

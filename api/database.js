@@ -1,5 +1,6 @@
 import mysql from 'mysql';
 import { User } from '../api/models/user.js';
+import { Enterprise } from '../api/models/enterprise.js'
 
 const db = mysql.createConnection({
     host: 'localhost',
@@ -16,25 +17,47 @@ db.connect((error) => {
     }
 });
 
+let enterprises = [
+    new Enterprise(1, 'Le Jardin'),
+    new Enterprise(2, 'Evian'),
+    new Enterprise(3, 'Olímpia Thermas')
+];
+fillEnterprisesVotes();
+
+let users = [];
 let usersEmail = [];
-setUsersEmail();
+fillUsers();
 
 export function getUsersEmail() {
     return usersEmail;
 }
 
-function setUsersEmail() {
-    db.query('SELECT email FROM users', (error, results) => {
+function fillUsers() {
+    db.query('SELECT id, name, email, vote FROM users', (error, results) => {
         if(error) {
             throw('Users Email Select Error: ', error);
         } else if(results.length > 0) {
             if(results.length == 1) {
-                usersEmail.push(results[0]);
+                users.push(results[0]);
+                usersEmail.push(results[0].email);
             } else {
-                usersEmail = results;
+                users = results;
+                users.forEach((user) => usersEmail.push({email: user.email}));
             }
         }
     });
+}
+
+function fillEnterprisesVotes() {
+    for(let i = 0; i < enterprises.length; i++) {
+        db.query('SELECT votes FROM enterprises WHERE id = ?', [i+1], (error, results) => {
+            if(error) {
+                throw('Votes Select Error: ', error);
+            } else if(results.length > 0) {
+                enterprises[i].votes = results[0].votes;
+            }
+        });
+    }
 }
 
 export async function requestLogin(credentials) {
@@ -55,7 +78,8 @@ export async function requestLogin(credentials) {
 export async function createUser(userData) {
     const { name, email, password } = userData;
     const user = new User(name, email, password);
-    usersEmail.push(user.email);
+    users.push({id: user.id, name: user.name, email: user.email, vote: user.vote});
+    usersEmail.push({email: user.email});
     return await new Promise((resolve, reject) => {
         db.query('INSERT INTO users (id, name, email, password, created_date) VALUES (?, ?, ?, ?, ?)', [user.id, user.name, user.email, user.password, user.created_date], (error) => {
             if(error) {
@@ -69,21 +93,19 @@ export async function createUser(userData) {
 }
 
 export async function computeVote(userId, enterpriseId) {
+    const user = users.find((user) => user.id === userId);
+    user.vote = 1;
+    user.enterprise = enterpriseId;
+    user.vote_date = new Date();
+    const enterprise = enterprises[user.enterpriseId-1];
+    enterprise.votes++;
     await new Promise((resolve, reject) => {
         db.query('UPDATE users SET vote = ? AND enterpriseId = ? AND vote_date = ? WHERE id = ?', [true, enterpriseId, new Date(), userId], (error) => {
             if(error) {
                 return reject('User Update Error: ', error);
             }
         });
-        const enterpriseVotes =
-        db.query('SELECT votes FROM enterprises WHERE id = ?', [enterpriseId], (error) => {
-            if(error) {
-                return reject('Votes Select Error: ', error);
-            } else {
-                return results[0];
-            }
-        });
-        db.query('UPDATE enterprises SET votes = ? WHERE id = ?', [enterpriseVotes + 1, enterpriseId], (error) => {
+        db.query('UPDATE enterprises SET votes = ? WHERE id = ?', [enterprise.votes, enterpriseId], (error) => {
             if(error) {
                 return reject('Enterprise Update Error: ', error);
             }

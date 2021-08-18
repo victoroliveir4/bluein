@@ -14,6 +14,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 app.engine('html', ejs.renderFile);
 app.set('view engine', 'html');
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/img', express.static(path.join(__dirname, 'img')));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
