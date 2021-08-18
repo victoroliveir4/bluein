@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+//import bcrypt from 'bcrypt';
 import { v4 as uuid } from 'uuid';
 
 export class User {
@@ -14,9 +14,9 @@ export class User {
         this.created_date = new Date();
     }
 
-    async encryptPassword(password) {
+    /*async encryptPassword(password) {
         return bcrypt.hash(password, 10).then(function(hash) {
             return hash;
         });
-    }
+    }*/
 }

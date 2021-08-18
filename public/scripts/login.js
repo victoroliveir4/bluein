@@ -1,16 +1,13 @@
-//import bcrypt from '../../node_modules/bcrypt';
-//import { login } from '../../index.js';
-//import { users } from '../../api/database.js';
-
 const alert = document.getElementById('alert');
 const form = document.getElementById('form');
 const email = document.getElementById('email');
 const password = document.getElementById('password');
+const loginButton = document.getElementById('loginButton');
 
-form.addEventListener('submit', event => {
+form.onsubmit = function (event) {
 	event.preventDefault();
 	checkCredentials();
-});
+}
 
 async function checkCredentials() {
 	// trim to remove the whitespaces
@@ -30,15 +27,7 @@ async function checkCredentials() {
 	} else if(passwordValue === '') {
         setError('Digite sua senha.');
     } else {
-        /*const user = users.find((user) => user.email === email);
-        if(!user) {
-            setError('E-mail não cadastrado.');
-        } else if (!await bcrypt.compare(password, user.passwword)) {
-			resetPassword();
-            setError('E-mail e/ou senha incorreto(s).');
-        } else {
-            login();
-        }*/
+        postRequest(emailValue, passwordValue);
 	}
 }
 
@@ -51,6 +40,40 @@ function resetPassword() {
 	password.value = '';
 }
 
+function resetAllInputs() {
+	email.value = '';
+	password.value = '';
+}
+
 function checkEmail(email) {
 	return /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/.test(email);
+}
+
+function postRequest(email, password) {
+	var http = new XMLHttpRequest();
+	var url = 'http://localhost:3000/login';
+	var params = encodeURIComponent('email') + '=' + encodeURIComponent(email) + '&' +
+				encodeURIComponent('password') + '=' + encodeURIComponent(password);
+	http.open('POST', url, true);
+	http.withCredentials = true;
+
+	http.onreadystatechange = function() {
+		if(http.readyState == 4) {
+			console.log(http.status);
+			if(http.status == 200) {
+				window.location.href = '/voting';
+			} else {
+				if(http.status == 401) {
+					setError('E-mail e/ou senha inválido(s).');
+				} else {
+					loginButton.disabled = true;
+					setError('Ocorreu um erro durante o login, atualize a página e tente novamente.');
+				}
+				resetAllInputs();
+			}
+		}
+	}
+	//Send the proper header information along with the request
+	http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	http.send(params);
 }

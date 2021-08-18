@@ -1,9 +1,9 @@
-import express from 'express';
-import path from 'path';
 import ejs from 'ejs';
-import { fileURLToPath } from 'url';
+import path from 'path';
+import express from 'express';
 //import session from 'express-session';
-import { enterprises, users } from './db/database.js';
+import { fileURLToPath } from 'url';
+import { getUsersEmail, requestLogin, createUser, computeVote } from './api/database.js';
 
 const PORT = 3000;
 const HOST = '0.0.0.0';
@@ -19,25 +19,38 @@ app.use(express.json());
 
 // get
 app.get('/', (req, res) => res.render('index'));
-app.get('/users', (req, res) => res.send(users));
-app.get('/enterprises', (req, res) => res.send(enterprises));
-app.get('/register', (req, res) => res.render('register'));
-//app.get('/voting', (req, res) => res.render('voting'));
-//app.get('/result', (req, res) => res.render('result'));
+app.get('/register', (req, res) => res.render('register', {usersEmail: JSON.stringify(getUsersEmail())}));
+app.get('/voting', (req, res) => res.render('voting'));
+app.get('/result', (req, res) => res.render('result'));
 
 // post
-/*app.post('/', async (req, res) => {
-    res.render('index');
+app.post('/login', async (req, res) => {
+    const userData = await requestLogin(req.body);
+    if(userData) {
+        const vote = userData.vote;
+        if(vote == 0) {
+            res.status(200).json({message: 'Usuário autenticado'});
+        } else if(vote == 1) {
+            // go to other page
+        } else {
+            res.status(401).json({message: 'Credenciais inválidas'});
+        }
+    } else {
+        res.status(500).json({message: 'Erro durante a requisição de login'});
+    }
 });
-app.post('/register', (req, res) => {
-    res.render('register');
+app.post('/register', async (req, res) => {
+    if(await createUser(req.body)) {
+        res.status(200).json({message: 'Usuário cadastrado com sucesso'});
+    } else {
+        res.status(500).json({message: 'Erro durante o cadastro do usuário no banco'});
+    }
+});
+/*app.post('/vote', async (req, res) => {
+    await computeVote(req.body);
 });*/
 
-// another routes
-app.all("*", (req, res) =>res.send("Esta rota não existe."));
+// Redirect to Login Page
+app.all("*", (req, res) => res.redirect('/'));
 
 app.listen(PORT, HOST, () => console.log(`Server running on: http://localhost:${PORT}`));
-
-export function login() {
-    res.render('voting');
-}

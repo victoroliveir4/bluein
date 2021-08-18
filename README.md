@@ -7,7 +7,7 @@ Votação de Empreendimentos
 # AWS
 docker-machine env aws01
 
-# BUILD NODE-IMMAGE
+# BUILD NODE-IMAGE
 docker build -t node-image .
 
 # BUILD MYSQL-IMAGE
