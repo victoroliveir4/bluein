@@ -1,4 +1,4 @@
-const usersEmail = document.currentScript.getAttribute('users');
+const usersEmail = JSON.parse(document.currentScript.getAttribute('users'));
 const alert = document.getElementById('alert');
 const form = document.getElementById('form');
 const name = document.getElementById('name');
@@ -30,7 +30,7 @@ function checkInputs() {
 		setError(email, 'Digite seu e-mail');
 	} else if (!checkEmail(emailValue)) {
 		setError(email, 'E-mail inválido');
-	} else if(JSON.parse(usersEmail).find((userEmail) => userEmail === emailValue)) {
+	} else if(usersEmail.find((user) => user.email === emailValue)) {
         setError(email, 'Este e-mail já está em uso');
     } else {
 		setSuccess(email);
@@ -58,6 +58,7 @@ function checkInputs() {
 	}
 
 	if(registerUser) {
+		usersEmail.push({email: emailValue});
 		postRequest(nameValue, emailValue, passwordValue);
 		resetAllInputs();
 	} else {
