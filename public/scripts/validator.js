@@ -41,6 +41,8 @@ password.onchange = function () {
 	if(passwordValue === '') {
 		resetStatus(passwordConfirm);
 		setError(password, 'Digite sua senha');
+	} else if(passwordValue.length < 6) {
+		setError(password, 'A senha deve conter no mínimo 6 caracteres');
 	} else if(passwordConfirmValue !== '') {
 		if(passwordValue !== passwordConfirmValue) {
 			password.value = '';
@@ -62,6 +64,8 @@ passwordConfirm.onchange = function () {
 	if(passwordConfirmValue === '') {
 		resetStatus(password);
 		setError(passwordConfirm, 'Confirme sua senha');
+	} else if(passwordConfirmValue.length < 6) {
+		setError(passwordConfirm, 'A senha deve conter no mínimo 6 caracteres');
 	} else if(passwordValue !== '') {
 		if(passwordValue !== passwordConfirmValue) {
 			password.value = '';
@@ -143,6 +147,20 @@ function setSuccess(input) {
 }
 
 function resetInput(input) {
+	switch(input) {
+		case name:
+			nameOk = false;
+			break;
+		case email:
+			emailOk = false;
+			break;
+		case password:
+			passwordOk = false;
+			break;
+		case passwordConfirm:
+			passwordConfirmOk = false;
+			break;
+	}
 	input.value = '';
 	input.parentElement.className = 'form-floating';
 }
