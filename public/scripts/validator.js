@@ -75,7 +75,10 @@ passwordConfirm.onchange = function () {
 }
 
 function checkInputs() {
-	if(nameOk && emailOk && passwordOk && confirmPasswordOk) {
+	if(nameOk && emailOk && passwordOk && passwordConfirmOk) {
+		const nameValue = name.value.trim();
+		const emailValue = email.value.trim();
+		const passwordValue = password.value.trim();
 		usersEmail.push(emailValue);
 		postRequest(nameValue, emailValue, passwordValue);
 		resetAllInputs();

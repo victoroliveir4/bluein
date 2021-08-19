@@ -5,6 +5,17 @@ body {
   position: relative;
 }
 
+.column {
+  float: left;
+  width: 50%;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
 .tableFixHead          { overflow: auto; height: 500px; }
 .tableFixHead thead th { position: sticky; top: 0; z-index: 1; }
 

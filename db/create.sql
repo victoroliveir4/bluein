@@ -15,8 +15,8 @@ CREATE TABLE IF NOT EXISTS users (
   password VARCHAR(255) NOT NULL,
   vote TINYINT DEFAULT 0,
   enterpriseId INT DEFAULT NULL,
-  vote_date DATETIME DEFAULT NULL,
-  created_date DATETIME NOT NULL,
+  vote_date VARCHAR(255) DEFAULT NULL,
+  created_date VARCHAR(255) NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (enterpriseId) REFERENCES enterprises(id)
 );

@@ -25,7 +25,7 @@ let enterprises = [
 fillEnterprisesVotes();
 
 let users = [];
-let namesWhoVoted = [];
+let whoVoted = [];
 let usersEmail = [];
 fillUsers();
 
@@ -34,17 +34,21 @@ export function getUsersEmail() {
 }
 
 function fillUsers() {
-    db.query('SELECT id, name, email, password, vote FROM users', (error, results) => {
+    db.query('SELECT id, name, email, password, vote, vote_date, created_date FROM users', (error, results) => {
         if(error) {
             throw('Users Email Select Error: ', error);
         } else if(results.length > 0) {
             if(results.length == 1) {
                 users.push(results[0]);
-                namesWhoVoted.push(results[0].name);
+                whoVoted.push({name: results[0].name, date: results[0].vote_date});
                 usersEmail.push(results[0].email);
             } else {
                 users = results;
-                users.forEach((user) => namesWhoVoted.push(user.name));
+                users.forEach((user) => {
+                    if(user.vote == 1) {
+                        whoVoted.push({name: user.name, date: user.vote_date})
+                    }
+                });
                 users.forEach((user) => usersEmail.push(user.email));
             }
         }
@@ -84,8 +88,8 @@ export async function requestLogin(email, password) {
 
 export async function createUser(userData) {
     const { name, email, password } = userData;
-    const user = new User(name, email, password);
-    users.push({id: user.id, name: user.name, email: user.email, password: user.password, vote: user.vote});
+    const user = new User(name, email, password, getDate());
+    users.push({id: user.id, name: user.name, email: user.email, password: user.password, vote: user.vote, vote_date: user.vote_date});
     usersEmail.push(user.email);
     return await new Promise((resolve) => {
         db.query('INSERT INTO users (id, name, email, password, created_date) VALUES (?, ?, ?, ?, ?)', [user.id, user.name, user.email, user.password, user.created_date], (error) => {
@@ -100,11 +104,11 @@ export async function createUser(userData) {
 }
 
 export async function computeVote(data) {
-    console.log(data);
     const {userEmail, enterpriseId} = data;
     const user = users.find((user) => user.email === userEmail);
     user.vote = 1;
-    namesWhoVoted.push(user.name);
+    user.vote_date = getDate();
+    whoVoted.push({name: user.name, date: user.vote_date});
     const enterprise = enterprises[enterpriseId-1];
     enterprise.votes++;
     return await new Promise((resolve) => {
@@ -114,7 +118,7 @@ export async function computeVote(data) {
                 resolve(false);
             }
         });
-        db.query('UPDATE users SET vote = ?, enterpriseId = ?, vote_date = ? WHERE email = ?', [true, enterpriseId, new Date(), userEmail], (error) => {
+        db.query('UPDATE users SET vote = ?, enterpriseId = ?, vote_date = ? WHERE email = ?', [true, enterpriseId, user.vote_date, userEmail], (error) => {
             if(error) {
                 console.log('User Update Error: ', error);
                 resolve(false);
@@ -132,6 +136,16 @@ export function getResult() {
     result.evianVotes = enterprises[1].votes;
     result.olimpiaVotes = enterprises[2].votes;
     result.totalVotes = result.jardinVotes + result.evianVotes + result.olimpiaVotes;
-    result.namesWhoVoted = namesWhoVoted;
+    result.whoVoted = whoVoted;
     return result;
+}
+
+function getDate(){
+    var data = new Date(),
+        dia  = data.getDate().toString(),
+        diaF = (dia.length == 1) ? '0'+dia : dia,
+        mes  = (data.getMonth()+1).toString(),
+        mesF = (mes.length == 1) ? '0'+mes : mes,
+        anoF = data.getFullYear();
+    return diaF+"/"+mesF+"/"+anoF;
 }

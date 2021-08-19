@@ -48,17 +48,18 @@
                 <p id="olimpiaVotes" class="lead" style="font-size: 32px; margin-top: 20px;"></p>
             </div>
 
-            <div class="tableFixHead mt-5" style="text-align: center; width: 40%;">
-                <table>
+            <div class="container mt-5">
+                <p class="lead" style="text-align: center; font-size: 32px;">Quem votou:</p>
+                <form class="d-flex">
+                    <input id="searchInput" class="form-control me-2" type="search" placeholder="Pesquisar" aria-label="Search">
+                </form>
+            </div>
+            <div class="container tableFixHead mt-5" style="text-align: center;">
+                <table id="whoVoted">
                     <thead>
-                        <tr><th>#</th><th>Nome</th></tr>
+                        <tr><th>#</th><th>Nome</th><th>Data</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td>1</td><td>A2</td></tr>
-                        <tr><td>2</td><td>B2</td></tr>
-                        <tr><td>3</td><td>C2</td></tr>
-                        <tr><td>4</td><td>D2</td></tr>
-                        <tr><td>5</td><td>E2</td></tr>
                     </tbody>
                 </table>
             </div>
