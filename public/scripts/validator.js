@@ -13,6 +13,7 @@ form.onsubmit = function (event) {
 	checkInputs();
 }
 
+// Validando nome do usuário no cadastro
 name.onchange = function () {
 	const nameValue = name.value.trim();
 	if(nameValue === '') {
@@ -22,6 +23,7 @@ name.onchange = function () {
 	}
 }
 
+// Validando e-mail do usuário no cadastro
 email.onchange = function () {
 	const emailValue = email.value.trim();
 	if(emailValue === '') {
@@ -35,6 +37,7 @@ email.onchange = function () {
 	}
 }
 
+// Validando senha do usuário no cadastro
 password.onchange = function () {
 	const passwordValue = password.value.trim();
 	const passwordConfirmValue = passwordConfirm.value.trim();
@@ -58,6 +61,7 @@ password.onchange = function () {
 	}
 }
 
+// Validando a confirmação da senha do usuário no cadastro
 passwordConfirm.onchange = function () {
 	const passwordValue = password.value.trim();
 	const passwordConfirmValue = passwordConfirm.value.trim();
@@ -81,6 +85,7 @@ passwordConfirm.onchange = function () {
 	}
 }
 
+// Checando se todas as flags estão validadas, antes de submeter o cadastro
 function checkInputs() {
 	if(nameOk && emailOk && passwordOk && passwordConfirmOk) {
 		const nameValue = name.value.trim();
@@ -94,20 +99,24 @@ function checkInputs() {
 	}
 }
 
+// Ocultar alerta
 function hiddeAlert() {
 	alert.className = 'alert-hidden';
 }
 
+// Exibe um alerta de erro e desabilita o botão de cadastro, caso o servidor responda com algum erro
 function setRegisterError(message) {
 	registerButton.disabled = true;
 	alert.innerText = message;
 	alert.className = 'alert alert-danger alert-visible';
 }
 
+// Exibe um alerta de sucesso, caso o cadastro do usuário seja confirmado
 function setRegisterSuccess() {
 	alert.className = 'alert alert-success alert-visible';
 }
 
+// Exibe um layot e mensagem de erro para uma input
 function setError(input, message) {
 	switch(input) {
 		case name:
@@ -128,6 +137,7 @@ function setError(input, message) {
 	formFloating.querySelector('small').innerText = message;
 }
 
+// Exibe um layot e mensagem de sucesso para uma input
 function setSuccess(input) {
 	switch(input) {
 		case name:
@@ -146,6 +156,7 @@ function setSuccess(input) {
 	input.parentElement.className = 'form-floating success';
 }
 
+// Reseta uma input, removendo o texto e layot de erro/sucesso
 function resetInput(input) {
 	switch(input) {
 		case name:
@@ -165,6 +176,7 @@ function resetInput(input) {
 	input.parentElement.className = 'form-floating';
 }
 
+// Reseta o texto e layot de todas as inputs
 function resetAllInputs() {
 	nameOk, emailOk, passwordOk, confirmPasswordOk = false;
 	resetInput(name);
@@ -173,14 +185,17 @@ function resetAllInputs() {
 	resetInput(passwordConfirm);;
 }
 
+// Reseta apenas o layot de uma input
 function resetStatus(input) {
 	input.parentElement.className = 'form-floating';
 }
 
+// Verifica se o formato do e-mail é válido
 function checkEmail(email) {
 	return /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/.test(email);
 }
 
+// Requisição POST
 function postRequest(name, email, password) {
 	var http = new XMLHttpRequest();
 	var url = 'http://localhost:3000/register';
@@ -189,6 +204,7 @@ function postRequest(name, email, password) {
 				encodeURIComponent('password') + '=' + encodeURIComponent(password);
 	http.open('POST', url, true);
 
+	// Recebe o status da resposta do servdidor
 	http.onreadystatechange = function() {
 		if(http.readyState == 4) {
 			if(http.status == 201) {
@@ -198,7 +214,6 @@ function postRequest(name, email, password) {
 			}
 		}
 	}
-	//Send the proper header information along with the request
 	http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 	http.send(params);
 }

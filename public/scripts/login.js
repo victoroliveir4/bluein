@@ -9,8 +9,8 @@ form.onsubmit = function (event) {
 	checkCredentials();
 }
 
+// Verifica se as credenciais do usuário são válidas, antes de solicitar um POST
 async function checkCredentials() {
-	// trim to remove the whitespaces
 	const emailValue = email.value.trim();
 	const passwordValue = password.value.trim();
 
@@ -31,24 +31,29 @@ async function checkCredentials() {
 	}
 }
 
+// Exibe uma alerta de erro com o valor da mensagem passada
 function setError(message) {
 	alert.innerText = message;
 	alert.className = 'alert alert-danger alert-visible';
 }
 
+// Reseta o valor do input da senha
 function resetPassword() {
 	password.value = '';
 }
 
+// Reseta o texto e layot de todas as inputs
 function resetAllInputs() {
 	email.value = '';
 	password.value = '';
 }
 
+// Verifica se o formato do e-mail é válido
 function checkEmail(email) {
 	return /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/.test(email);
 }
 
+// Requisição POST
 function postRequest(email, password) {
 	var http = new XMLHttpRequest();
 	var url = 'http://localhost:3000/';
@@ -57,6 +62,7 @@ function postRequest(email, password) {
 	http.open('POST', url, true);
 	http.withCredentials = true;
 
+	// Recebe o status da resposta do servdidor
 	http.onreadystatechange = function() {
 		if(http.readyState == 4) {
 			if(http.status == 200) {
@@ -73,7 +79,6 @@ function postRequest(email, password) {
 			}
 		}
 	}
-	//Send the proper header information along with the request
 	http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	http.send(params);
 }

@@ -14,6 +14,7 @@ export class User {
         this.created_date = created_date;
     }
 
+    // Criptografa a senha do usuário
     async encryptPassword(password) {
         return await new Promise((resolve) => {
             resolve(bcrypt.hash(password));

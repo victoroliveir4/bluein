@@ -2,6 +2,7 @@ import mysql from 'mysql';
 import { User } from '../api/models/user.js';
 import { Enterprise } from '../api/models/enterprise.js'
 
+// Cria conexão com o banco de dados
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -29,10 +30,12 @@ let whoVoted = [];
 let usersEmail = [];
 fillUsers();
 
+// Retorna os e-mails de todos os usuários cadastrados
 export function getUsersEmail() {
     return usersEmail;
 }
 
+// Preenche as variáveis de usuário no start do servidor, com os dados já existentes no banco
 function fillUsers() {
     db.query('SELECT id, name, email, password, vote, vote_date, created_date FROM users', (error, results) => {
         if(error) {
@@ -55,6 +58,7 @@ function fillUsers() {
     });
 }
 
+// Preenche os votos de cada empreendimento, com dados já existentes no banco
 function fillEnterprisesVotes() {
     for(let i = 0; i < enterprises.length; i++) {
         db.query('SELECT votes FROM enterprises WHERE id = ?', [i+1], (error, results) => {
@@ -67,6 +71,7 @@ function fillEnterprisesVotes() {
     }
 }
 
+// Verifica se as credenciais do usuário são válidas
 export async function requestLogin(email, password) {
     const user = users.find((user) => user.email === email);
     try {
@@ -86,6 +91,7 @@ export async function requestLogin(email, password) {
     }
 }
 
+// Cria um novo usuário
 export async function createUser(userData) {
     const { name, email, password } = userData;
     const user = new User(name, email, password, getDate());
@@ -103,6 +109,7 @@ export async function createUser(userData) {
     });
 }
 
+// Computa o voto do usuário
 export async function computeVote(data) {
     const {userEmail, enterpriseId} = data;
     const user = users.find((user) => user.email === userEmail);
@@ -135,6 +142,7 @@ export async function computeVote(data) {
     }
 }
 
+// Retorna todos os dados necessários do resultado parcial da votação
 export function getResult() {
     const result = new Object();
     result.jardinVotes = enterprises[0].votes;
@@ -145,6 +153,7 @@ export function getResult() {
     return result;
 }
 
+// Retorna a data corrente formatada (dd/MM/aaaa)
 function getDate(){
     var data = new Date(),
         dia  = data.getDate().toString(),

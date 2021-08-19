@@ -4,17 +4,21 @@ const evianButton = document.getElementById('evianButton');
 const olimpiaButton = document.getElementById('olimpiaButton');
 
 jardinButton.onclick = function () {
+	// Usuário votou no empreendimento 1 - Le Jardin
 	postRequest(1);
 }
 
 evianButton.onclick = function () {
+	// Usuário votou no empreendimento 2 - Evian
 	postRequest(2);
 }
 
 olimpiaButton.onclick = function () {
+	// Usuário votou no empreendimento 3 - Olímpia Thermas
 	postRequest(3);
 }
 
+// Requisição POST
 function postRequest(enterpriseId) {
 	var http = new XMLHttpRequest();
 	var url = 'http://localhost:3000/vote';
@@ -23,6 +27,7 @@ function postRequest(enterpriseId) {
 	http.open('POST', url, true);
     http.withCredentials = true;
 
+	// Recebe o status da resposta do servdidor
 	http.onreadystatechange = function() {
 		if(http.readyState == 4) {
 			if(http.status == 200) {
@@ -32,7 +37,6 @@ function postRequest(enterpriseId) {
 			}
 		}
 	}
-	//Send the proper header information along with the request
 	http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 	http.send(params);
 }

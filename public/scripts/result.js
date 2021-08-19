@@ -18,6 +18,7 @@ jardinVotesElement.innerText = jardinVotes + (jardinVotes != 1 ? ' votos' : ' vo
 evianVotesElement.innerText = evianVotes + (evianVotes != 1 ? ' votos' : ' voto');
 olimpiaVotesElement.innerText = olimpiaVotes + (olimpiaVotes != 1 ? ' votos' : ' voto');
 
+// Caso o total de votos seja diferente de zero, preenche os dados do resultado
 if(totalVotes != 0) {
     jardinProgressElement.style = 'width: ' + (jardinVotes/totalVotes)*100  + '%;';
     evianProgressElement.style = 'width: ' + (evianVotes/totalVotes)*100  + '%;';
@@ -25,10 +26,12 @@ if(totalVotes != 0) {
     loadTableData();
 }
 
+// Quando algo é digitado no campo de pesquisa da tabela, chama a função que filtra os dados
 searchInput.onkeyup = function () {
 	searchFunction();
 }
 
+// Carrega as informações dos usuários que já votaram na tabela
 function loadTableData() {
     let cont = 1;
     whoVoted.forEach((item) => {
@@ -41,6 +44,7 @@ function loadTableData() {
     });
 }
 
+// Filtra os nomes e datas da tabela de usuários, de acordo com o campo de pesquisa
 function searchFunction() {
     let filter = searchInput.value.toUpperCase();
     for (i = 0; i < tr.length; i++) {
