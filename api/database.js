@@ -106,28 +106,33 @@ export async function createUser(userData) {
 export async function computeVote(data) {
     const {userEmail, enterpriseId} = data;
     const user = users.find((user) => user.email === userEmail);
-    user.vote = 1;
-    user.vote_date = getDate();
-    whoVoted.push({name: user.name, date: user.vote_date});
-    const enterprise = enterprises[enterpriseId-1];
-    enterprise.votes++;
-    return await new Promise((resolve) => {
-        db.query('UPDATE enterprises SET votes = ? WHERE id = ?', [enterprise.votes, enterpriseId], (error) => {
-            if(error) {
-                console.log('Enterprise Update Error: ', error);
-                resolve(false);
-            }
+    if(user.vote == 0) {
+        user.vote = 1;
+        user.vote_date = getDate();
+        whoVoted.push({name: user.name, date: user.vote_date});
+        const enterprise = enterprises[enterpriseId-1];
+        enterprise.votes++;
+        return await new Promise((resolve) => {
+            db.query('UPDATE enterprises SET votes = ? WHERE id = ?', [enterprise.votes, enterpriseId], (error) => {
+                if(error) {
+                    console.log('Enterprise Update Error: ', error);
+                    resolve(false);
+                }
+            });
+            db.query('UPDATE users SET vote = ?, enterpriseId = ?, vote_date = ? WHERE email = ?', [true, enterpriseId, user.vote_date, userEmail], (error) => {
+                if(error) {
+                    console.log('User Update Error: ', error);
+                    resolve(false);
+                } else {
+                    console.log(`User with e-mail ${userEmail} just voted, database updated.`);
+                    resolve(true);
+                }
+            });
         });
-        db.query('UPDATE users SET vote = ?, enterpriseId = ?, vote_date = ? WHERE email = ?', [true, enterpriseId, user.vote_date, userEmail], (error) => {
-            if(error) {
-                console.log('User Update Error: ', error);
-                resolve(false);
-            } else {
-                console.log(`User with e-mail ${userEmail} just voted, database updated.`);
-                resolve(true);
-            }
-        });
-    });
+    } else {
+        // Este usuário já votou
+        return false;
+    }
 }
 
 export function getResult() {

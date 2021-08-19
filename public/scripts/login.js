@@ -51,7 +51,7 @@ function checkEmail(email) {
 
 function postRequest(email, password) {
 	var http = new XMLHttpRequest();
-	var url = 'http://localhost:3000/login';
+	var url = 'http://localhost:3000/';
 	var params = encodeURIComponent('email') + '=' + encodeURIComponent(email) + '&' +
 				encodeURIComponent('password') + '=' + encodeURIComponent(password);
 	http.open('POST', url, true);
@@ -59,15 +59,17 @@ function postRequest(email, password) {
 
 	http.onreadystatechange = function() {
 		if(http.readyState == 4) {
-			if(http.status != 200) {
-				if(http.status == 401) {
-					resetPassword();
-					setError('E-mail e/ou senha inválido(s).');
-				} else {
-					resetAllInputs();
-					loginButton.disabled = true;
-					setError('Ocorreu um erro durante o login, atualize a página e tente novamente.');
-				}
+			if(http.status == 200) {
+				window.location.href = '/voting';
+			} else if(http.status == 202) {
+				window.location.href = '/computed';
+			} else if(http.status == 401) {
+				resetPassword();
+				setError('E-mail e/ou senha inválido(s).');
+			} else {
+				resetAllInputs();
+				loginButton.disabled = true;
+				setError('Ocorreu um erro durante o login, atualize a página e tente novamente.');
 			}
 		}
 	}

@@ -28,7 +28,7 @@ function postRequest(enterpriseId) {
 			if(http.status == 200) {
 				window.location.href = '/computed';
 			} else {
-				document.body.innerHTML = '<h2 style="text-align: center; margin-top: 50px;"> Ocorreu um erro durante a computação do voto, atualize a página e tente novamente.</h2>';
+				window.location.href = '/logout';
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 import ejs from 'ejs';
 import path from 'path';
 import express from 'express';
-//import session from 'express-session';
+import session from 'express-session';
 import { fileURLToPath } from 'url';
 import { getUsersEmail, requestLogin, createUser, computeVote, getResult } from './api/database.js';
 
@@ -17,26 +17,47 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/img', express.static(path.join(__dirname, 'img')));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
+app.use(session({secret:'1fh6a4ffalf9g7s5hfks7r6rwjwldfhhh7', name:'uniqueSessionID', saveUninitialized: false}));
 
 // get
 app.get('/', (req, res) => res.render('index'));
 app.get('/register', (req, res) => res.render('register', {usersEmail: JSON.stringify(getUsersEmail())}));
-app.get('/voting', (req, res) => res.render('voting', {userEmail: 'victor_olivery@hotmail.com'}));
-app.get('/computed', (req, res) => res.render('computed'));
+app.get('/voting', (req, res) => {
+    if(req.session.loggedIn) {
+        res.render('voting', {userEmail: req.session.email});
+    } else {
+        res.redirect('/');
+    }
+});
+app.get('/computed', (req, res) => {
+    if(req.session.loggedIn) {
+        res.render('computed');
+    } else {
+        res.redirect('/');
+    }
+});
 app.get('/result', (req, res) => res.render('result', res.render('result', {result: JSON.stringify(getResult())})));
+app.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.redirect('/');
+});
 
 // post
-app.post('/login', async (req, res) => {
+app.post('/', async (req, res) => {
     const { email, password } = req.body;
     const vote = await requestLogin(email, password);
     if(vote == 0) {
-        res.render('voting', {userEmail: email});
+        req.session.loggedIn = true;
+        req.session.email = email;
+        res.status(200).json({message: 'Usuário autenticado, não votou'});
     } else if(vote == 1) {
-        res.render('computed');
+        req.session.loggedIn = true
+        req.session.email = email;
+        res.status(202).json({message: 'Usuário autenticado, já votou'});
     } else if(vote == 2) {
-        res.status(401).json({message: 'Credenciais inválidas'});
+        res.status(401).json({message: 'Credenciais inválidas.'});
     } else {
-        res.status(500).json({message: 'Erro durante a requisição de login'});
+        res.status(500).json({message: 'Ocorreu um erro durante a requisição de login, tente atualizar a página.'});
     }
 });
 app.post('/register', async (req, res) => {
@@ -50,7 +71,7 @@ app.post('/vote', async (req, res) => {
     if(await computeVote(req.body)) {
         res.status(200).json({message: 'Voto computado com sucesso'});
     } else {
-        res.status(500).json({message: 'Erro durante a computação do voto'});
+        res.status(400).json({message: 'Este usuário já votou'});
     }
 });
 
