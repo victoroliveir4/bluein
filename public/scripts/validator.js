@@ -1,4 +1,4 @@
-const usersEmail = JSON.parse(document.currentScript.getAttribute('users'));
+const usersEmail = JSON.parse(document.currentScript.getAttribute('usersEmail'));
 const alert = document.getElementById('alert');
 const form = document.getElementById('form');
 const name = document.getElementById('name');
@@ -6,65 +6,81 @@ const email = document.getElementById('email');
 const password = document.getElementById('password');
 const passwordConfirm = document.getElementById('passwordConfirm');
 const registerButton = document.getElementById('registerButton');
-let registerUser = true;
+let nameOk, emailOk, passwordOk, passwordConfirmOk = false;
 
 form.onsubmit = function (event) {
 	event.preventDefault();
 	checkInputs();
 }
 
-function checkInputs() {
-	// trim to remove the whitespaces
+name.onchange = function () {
 	const nameValue = name.value.trim();
-	const emailValue = email.value.trim();
-	const passwordValue = password.value.trim();
-	const passwordConfirmValue = passwordConfirm.value.trim();
-
 	if(nameValue === '') {
 		setError(name, 'Digite seu nome');
 	} else {
 		setSuccess(name);
 	}
+}
 
-	console.log(usersEmail);
+email.onchange = function () {
+	const emailValue = email.value.trim();
 	if(emailValue === '') {
 		setError(email, 'Digite seu e-mail');
 	} else if (!checkEmail(emailValue)) {
 		setError(email, 'E-mail inválido');
-	} else if(usersEmail.find((user) => user.email === emailValue)) {
+	} else if(usersEmail.find((email) => email === emailValue)) {
         setError(email, 'Este e-mail já está em uso');
     } else {
 		setSuccess(email);
 	}
+}
 
+password.onchange = function () {
+	const passwordValue = password.value.trim();
+	const passwordConfirmValue = passwordConfirm.value.trim();
 	if(passwordValue === '') {
-		if(passwordConfirmValue === '') {
-			setError(password, 'Digite sua senha');
-			setError(passwordConfirm, 'Confirme sua senha');
-		} else {
-			resetStatus(passwordConfirm);
-			setError(password, 'Digite sua senha');
+		resetStatus(passwordConfirm);
+		setError(password, 'Digite sua senha');
+	} else if(passwordConfirmValue !== '') {
+		if(passwordValue !== passwordConfirmValue) {
+			password.value = '';
+			passwordConfirm.value = '';
+			setError(password, '');
+			setError(passwordConfirm, 'As senhas não coincidem');
 		}
-	} else if(passwordConfirmValue === '') {
+	} else {
+		resetStatus(password);
+	}
+}
+
+passwordConfirm.onchange = function () {
+	const passwordValue = password.value.trim();
+	const passwordConfirmValue = passwordConfirm.value.trim();
+	if(passwordConfirmValue === '') {
 		resetStatus(password);
 		setError(passwordConfirm, 'Confirme sua senha');
-	} else if(passwordValue !== passwordConfirmValue) {
-		password.value = '';
-		passwordConfirm.value = '';
-		setError(password, '');
-		setError(passwordConfirm, 'As senhas não coincidem');
+	} else if(passwordValue !== '') {
+		if(passwordValue !== passwordConfirmValue) {
+			password.value = '';
+			passwordConfirm.value = '';
+			setError(password, '');
+			setError(passwordConfirm, 'As senhas não coincidem');
+		} else {
+			setSuccess(password);
+			setSuccess(passwordConfirm);
+		}
 	} else{
-		setSuccess(password);
-		setSuccess(passwordConfirm);
+		resetStatus(passwordConfirm);
 	}
+}
 
-	if(registerUser) {
-		usersEmail.push({email: emailValue});
+function checkInputs() {
+	if(nameOk && emailOk && passwordOk && confirmPasswordOk) {
+		usersEmail.push(emailValue);
 		postRequest(nameValue, emailValue, passwordValue);
 		resetAllInputs();
 	} else {
 		hiddeAlert();
-		registerUser = true;
 	}
 }
 
@@ -83,13 +99,40 @@ function setRegisterSuccess() {
 }
 
 function setError(input, message) {
+	switch(input) {
+		case name:
+			nameOk = false;
+			break;
+		case email:
+			emailOk = false;
+			break;
+		case password:
+			passwordOk = false;
+			break;
+		case passwordConfirm:
+			passwordConfirmOk = false;
+			break;
+	}
 	const formFloating = input.parentElement;
 	formFloating.className = 'form-floating error';
 	formFloating.querySelector('small').innerText = message;
-	registerUser = false;
 }
 
 function setSuccess(input) {
+	switch(input) {
+		case name:
+			nameOk = true;
+			break;
+		case email:
+			emailOk = true;
+			break;
+		case password:
+			passwordOk = true;
+			break;
+		case passwordConfirm:
+			passwordConfirmOk = true;
+			break;
+	}
 	input.parentElement.className = 'form-floating success';
 }
 
@@ -99,6 +142,7 @@ function resetInput(input) {
 }
 
 function resetAllInputs() {
+	nameOk, emailOk, passwordOk, confirmPasswordOk = false;
 	resetInput(name);
 	resetInput(email);
 	resetInput(password);
@@ -123,7 +167,7 @@ function postRequest(name, email, password) {
 
 	http.onreadystatechange = function() {
 		if(http.readyState == 4) {
-			if(http.status == 200) {
+			if(http.status == 201) {
 				setRegisterSuccess();
 			} else {
 				setRegisterError('Ocorreu um erro durante o cadastro, atualize a página e tente novamente.');

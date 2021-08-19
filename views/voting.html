@@ -31,24 +31,24 @@
                 <h1 style="margin-bottom: 20px;">Le Jardin</h1>
                 <img src="/img/le-jardin.jpg" class="img-fluid" style="margin-bottom: 20px;" alt="...">
                 <p class="lead">O Best Western Suites Le Jardin é um moderno, prático e aconchegante hotel de luxo com serviços de alto padrão. Cultivamos nossa excelência inspirados na harmonia, beleza e encanto das flores.</p>
-                <a class="btn btn-lg btn-primary" style="width: 150px;" role="button">Votar</a>
+                <button id="jardinButton" class="btn btn-lg btn-primary" style="width: 150px;" type="submit">Votar</button>
             </div>
 
             <div class="container bg-light p-5 rounded mt-5">
                 <h1 style="margin-bottom: 20px;">Evian</h1>
                 <img src="/img/evian.jpg" class="img-fluid" style="margin-bottom: 20px;" alt="...">
-                <p class="lead">O conjunto aquático foi cuidadosamente projetado para  criar beleza, conforto e entretenimento para toda a família. Desde o bar aquático, locais de relaxamento, áreas para crianças, até os nossos jardins e espaços verdes, nossa maior prioridade sempre foi oferecer a melhor experiência aos nossos usuários.</p>
-                <a class="btn btn-lg btn-primary" style="width: 150px;" role="button">Votar</a>
+                <p class="lead">O conjunto aquático foi cuidadosamente projetado para criar beleza, conforto e entretenimento para toda a família. Desde o bar aquático, locais de relaxamento, áreas para crianças, até os nossos jardins e espaços verdes, nossa maior prioridade sempre foi oferecer a melhor experiência aos nossos usuários.</p>
+                <button id="evianButton" class="btn btn-lg btn-primary" style="width: 150px;" type="submit">Votar</button>
             </div>
 
             <div class="container bg-light p-5 rounded mt-5">
                 <h1 style="margin-bottom: 20px;">Olímpia Thermas</h1>
                 <img src="/img/olimpia.jpg" class="img-fluid" style="margin-bottom: 20px;" alt="...">
                 <p class="lead">O Olímpia Thermas é o 5º parque aquático mais visitado do mundo e o maior parque aquático de águas quentes da América Latina. Infra estrutura completa, oferece 55 atrações, muitas inéditas no país, dos mais radicais ao mais calmo.</p>
-                <a class="btn btn-lg btn-primary" style="width: 150px;" role="button">Votar</a>
+                <button id="olimpiaButton" class="btn btn-lg btn-primary" style="width: 150px;" type="submit">Votar</button>
             </div>
         </main>
 
-    <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="scripts/vote.js" userEmail="<%= userEmail %>"></script>
     </body>
 </html>

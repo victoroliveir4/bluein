@@ -59,17 +59,15 @@ function postRequest(email, password) {
 
 	http.onreadystatechange = function() {
 		if(http.readyState == 4) {
-			console.log(http.status);
-			if(http.status == 200) {
-				window.location.href = '/voting';
-			} else {
+			if(http.status != 200) {
 				if(http.status == 401) {
+					resetPassword();
 					setError('E-mail e/ou senha inválido(s).');
 				} else {
+					resetAllInputs();
 					loginButton.disabled = true;
 					setError('Ocorreu um erro durante o login, atualize a página e tente novamente.');
 				}
-				resetAllInputs();
 			}
 		}
 	}
