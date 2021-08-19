@@ -47,6 +47,9 @@ password.onchange = function () {
 			passwordConfirm.value = '';
 			setError(password, '');
 			setError(passwordConfirm, 'As senhas não coincidem');
+		} else {
+			setSuccess(password);
+			setSuccess(passwordConfirm);
 		}
 	} else {
 		resetStatus(password);
