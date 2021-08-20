@@ -19,7 +19,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(session({secret:'1fh6a4ffalf9g7s5hfks7r6rwjwldfhhh7', name:'uniqueSessionID', saveUninitialized: false}));
 
-// Add headers before the routes are defined
+// Adicionando headers antes das rotas serem definidas
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', 'http://blueinvtech.com');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
