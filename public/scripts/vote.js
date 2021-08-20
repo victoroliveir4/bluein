@@ -21,10 +21,11 @@ olimpiaButton.onclick = function () {
 // Requisição POST
 function postRequest(enterpriseId) {
 	var http = new XMLHttpRequest();
-	var url = 'http://3.91.55.0:3000/vote';
+	var url = 'http://localhost:3000/vote';
 	var params = encodeURIComponent('userEmail') + '=' + encodeURIComponent(userEmail) + '&' +
 				encodeURIComponent('enterpriseId') + '=' + encodeURIComponent(enterpriseId);
 	http.open('POST', url, true);
+    http.withCredentials = true;
 
 	// Recebe o status da resposta do servdidor
 	http.onreadystatechange = function() {

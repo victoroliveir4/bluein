@@ -17,7 +17,7 @@ export class User {
     // Criptografa a senha do usuário
     async encryptPassword(password) {
         return await new Promise((resolve) => {
-            resolve(bcrypt.hash(password));
+            resolve(bcrypt.hash(password, 10));
         });
     }
 }
