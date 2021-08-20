@@ -25,7 +25,6 @@ function postRequest(enterpriseId) {
 	var params = encodeURIComponent('userEmail') + '=' + encodeURIComponent(userEmail) + '&' +
 				encodeURIComponent('enterpriseId') + '=' + encodeURIComponent(enterpriseId);
 	http.open('POST', url, true);
-    http.withCredentials = true;
 
 	// Recebe o status da resposta do servdidor
 	http.onreadystatechange = function() {
@@ -38,6 +37,6 @@ function postRequest(enterpriseId) {
 		}
 	}
 	http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-	http.setRequestHeader('Access-Control-Allow-Origin', 'http://blueinvtech.com');
+	http.setRequestHeader('Access-Control-Allow-Origin', 'http://54.234.126.98:3000');
 	http.send(params);
 }

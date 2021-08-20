@@ -215,6 +215,6 @@ function postRequest(name, email, password) {
 		}
 	}
 	http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-	http.setRequestHeader('Access-Control-Allow-Origin', 'http://blueinvtech.com');
+	http.setRequestHeader('Access-Control-Allow-Origin', 'http://54.234.126.98:3000');
 	http.send(params);
 }
