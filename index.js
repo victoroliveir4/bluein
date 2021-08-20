@@ -55,9 +55,9 @@ app.post('/', async (req, res) => {
         req.session.email = email;
         res.status(202).json({message: 'Usuário autenticado, já votou'});
     } else if(vote == 2) {
-        res.status(401).json({message: 'Credenciais inválidas.'});
+        res.status(401).json({message: 'Credenciais inválidas'});
     } else {
-        res.status(500).json({message: 'Ocorreu um erro durante a requisição de login, tente atualizar a página.'});
+        res.status(500).json({message: 'Ocorreu um erro durante a requisição de login'});
     }
 });
 app.post('/register', async (req, res) => {

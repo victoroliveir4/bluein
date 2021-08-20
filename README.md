@@ -19,10 +19,13 @@ docker-compose up -d
 
 docker exec -i mysql-container mysql -uroot -pbluein < db/create.sql
 
-# AWS
+# Bash mysql-container
 
+docker exec -it mysql-container /bin/bash
+
+# Docker mahine with AWS
+
+docker-machine create --driver amazonec2 aws01
 docker-machine env aws01
-
-# Docker machine
-
 docker-compose -f docker-compose.yml -f docker-production.yml up -d
+

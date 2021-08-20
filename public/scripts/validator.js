@@ -198,7 +198,7 @@ function checkEmail(email) {
 // Requisição POST
 function postRequest(name, email, password) {
 	var http = new XMLHttpRequest();
-	var url = 'http://localhost:3000/register';
+	var url = 'http://blueinvtech.com/vote';
 	var params = encodeURIComponent('name') + '=' + encodeURIComponent(name) + '&' +
 				encodeURIComponent('email') + '=' + encodeURIComponent(email) + '&' +
 				encodeURIComponent('password') + '=' + encodeURIComponent(password);
