@@ -19,15 +19,6 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(session({secret:'1fh6a4ffalf9g7s5hfks7r6rwjwldfhhh7', name:'uniqueSessionID', saveUninitialized: false}));
 
-// Adicionando headers antes das rotas serem definidas
-app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', 'http://54.234.126.98:3000');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'content-type');
-    res.setHeader('Access-Control-Allow-Credentials', true);
-    next();
-});
-
 // Requisições GET
 app.get('/', (req, res) => res.render('index'));
 app.get('/register', (req, res) => res.render('register', {usersEmail: JSON.stringify(getUsersEmail())}));

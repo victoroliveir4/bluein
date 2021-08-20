@@ -56,7 +56,7 @@ function checkEmail(email) {
 // Requisição POST
 function postRequest(email, password) {
 	var http = new XMLHttpRequest();
-	var url = 'http://blueinvtech.com';
+	var url = 'http://54.234.126.98:3000';
 	var params = encodeURIComponent('email') + '=' + encodeURIComponent(email) + '&' +
 				encodeURIComponent('password') + '=' + encodeURIComponent(password);
 	http.open('POST', url, true);
@@ -80,6 +80,5 @@ function postRequest(email, password) {
 		}
 	}
 	http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	http.setRequestHeader('Access-Control-Allow-Origin', 'http://54.234.126.98:3000');
 	http.send(params);
 }

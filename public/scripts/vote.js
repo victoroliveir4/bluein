@@ -21,7 +21,7 @@ olimpiaButton.onclick = function () {
 // Requisição POST
 function postRequest(enterpriseId) {
 	var http = new XMLHttpRequest();
-	var url = 'http://blueinvtech.com/vote';
+	var url = 'http://54.234.126.98:3000/vote';
 	var params = encodeURIComponent('userEmail') + '=' + encodeURIComponent(userEmail) + '&' +
 				encodeURIComponent('enterpriseId') + '=' + encodeURIComponent(enterpriseId);
 	http.open('POST', url, true);
@@ -37,6 +37,5 @@ function postRequest(enterpriseId) {
 		}
 	}
 	http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-	http.setRequestHeader('Access-Control-Allow-Origin', 'http://54.234.126.98:3000');
 	http.send(params);
 }
