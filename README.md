@@ -1,17 +1,28 @@
 # Bluein Tech
+
 Votação de Empreendimentos
+# DOCKER COMMANDS
 
+# Build node-image
 
-# DOCKER COMMANDS:
-
-# AWS
-docker-machine env aws01
-
-# BUILD NODE-IMAGE
 docker build -t node-image .
 
-# BUILD MYSQL-IMAGE
+# Build mysql-image
+
 docker build -t mysql-image -f db/Dockerfile .
 
-# RUN DOCKER COMPOSE
+# Run docker compose
+
 docker-compose up -d
+
+# Run MYSQL script
+
+docker exec -i mysql-container mysql -uroot -pbluein < db/create.sql
+
+# AWS
+
+docker-machine env aws01
+
+# Docker machine
+
+docker-compose -f docker-compose.yml -f docker-production.yml up -d

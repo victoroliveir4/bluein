@@ -1,11 +1,11 @@
-version: "3"
+version: "2"
 
 services:
   app:
     labels:
       - "traefik.enable=true"
       - "traefik.frontend.rule=Host:blueinvtech.com"
-  
+
   reverse-proxy:
     image: traefik
     command: --api --docker.exposedbydefault=false

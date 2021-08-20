@@ -4,9 +4,9 @@ import { Enterprise } from '../api/models/enterprise.js'
 
 // Cria conexão com o banco de dados
 const db = mysql.createConnection({
-    host: 'localhost',
+    host: 'mysql-container',
     user: 'root',
-    password: 'firebee00',
+    password: 'bluein',
     database: 'bluein'
 });
 
