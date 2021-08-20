@@ -19,6 +19,15 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(session({secret:'1fh6a4ffalf9g7s5hfks7r6rwjwldfhhh7', name:'uniqueSessionID', saveUninitialized: false}));
 
+// Add headers before the routes are defined
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', 'http://blueinvtech.com');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
+});
+
 // Requisições GET
 app.get('/', (req, res) => res.render('index'));
 app.get('/register', (req, res) => res.render('register', {usersEmail: JSON.stringify(getUsersEmail())}));
