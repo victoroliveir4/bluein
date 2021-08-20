@@ -4,7 +4,7 @@ services:
   app:
     labels:
       - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:blueinvtech.com"
+      - "traefik.frontend.rule=Host:3.91.55.0:3000"
 
   reverse-proxy:
     image: traefik

