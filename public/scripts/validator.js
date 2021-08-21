@@ -1,4 +1,5 @@
-const usersEmail = JSON.parse(document.currentScript.getAttribute('usersEmail'));
+const registeredUser = JSON.parse(document.currentScript.getAttribute('registeredUser'));
+const error = JSON.parse(document.currentScript.getAttribute('error'));
 const alert = document.getElementById('alert');
 const form = document.getElementById('form');
 const name = document.getElementById('name');
@@ -7,6 +8,13 @@ const password = document.getElementById('password');
 const passwordConfirm = document.getElementById('passwordConfirm');
 const registerButton = document.getElementById('registerButton');
 let nameOk, emailOk, passwordOk, passwordConfirmOk = false;
+if(!error) var usersEmail = JSON.parse(document.currentScript.getAttribute('usersEmail'));
+
+if(registeredUser) {
+	setRegisterSuccess();
+} else if(error) {
+	setRegisterError();
+}
 
 form.onsubmit = function (event) {
 	event.preventDefault();
@@ -85,17 +93,34 @@ passwordConfirm.onchange = function () {
 	}
 }
 
-// Checando se todas as flags estão validadas, antes de submeter o cadastro
+// Checando se todos os inputs foram validados, antes de submeter o cadastro
 function checkInputs() {
+	const nameValue = name.value.trim();
+	const emailValue = email.value.trim();
+	const passwordValue = password.value.trim();
+	const passwordConfirmValue = passwordConfirm.value.trim();
 	if(nameOk && emailOk && passwordOk && passwordConfirmOk) {
-		const nameValue = name.value.trim();
-		const emailValue = email.value.trim();
-		const passwordValue = password.value.trim();
 		usersEmail.push(emailValue);
-		postRequest(nameValue, emailValue, passwordValue);
-		resetAllInputs();
+		postRequest({name: nameValue, email: emailValue, password: passwordValue});
 	} else {
 		hiddeAlert();
+		setRequiredFields(nameValue, emailValue, passwordValue, passwordConfirmValue);
+	}
+}
+
+// Exibe uma mensagem de campo obrigatório para os inputs vazios
+function setRequiredFields(nameValue, emailValue, passwordValue, passwordConfirmValue) {
+	if(nameValue == '') {
+		setError(name, 'Cammpo obrigatório');
+	}
+	if(emailValue == '') {
+		setError(email, 'Cammpo obrigatório');
+	}
+	if(passwordValue == '') {
+		setError(password, 'Cammpo obrigatório');
+	}
+	if(passwordConfirmValue == '') {
+		setError(passwordConfirm, 'Cammpo obrigatório');
 	}
 }
 
@@ -104,10 +129,14 @@ function hiddeAlert() {
 	alert.className = 'alert-hidden';
 }
 
-// Exibe um alerta de erro e desabilita o botão de cadastro, caso o servidor responda com algum erro
-function setRegisterError(message) {
+// Exibe um alerta de falha e desabilita o botão de cadastro, caso o servidor responda com algum erro
+function setRegisterError() {
+	name.disabled = true;
+	email.disabled = true;
+	password.disabled = true;
+	passwordConfirm.disabled = true;
 	registerButton.disabled = true;
-	alert.innerText = message;
+	alert.innerText = 'Falha ao cadastrar usuário, recarregue a página e tente novamente';
 	alert.className = 'alert alert-danger alert-visible';
 }
 
@@ -118,20 +147,7 @@ function setRegisterSuccess() {
 
 // Exibe um layot e mensagem de erro para uma input
 function setError(input, message) {
-	switch(input) {
-		case name:
-			nameOk = false;
-			break;
-		case email:
-			emailOk = false;
-			break;
-		case password:
-			passwordOk = false;
-			break;
-		case passwordConfirm:
-			passwordConfirmOk = false;
-			break;
-	}
+	validateInput(input, false);
 	const formFloating = input.parentElement;
 	formFloating.className = 'form-floating error';
 	formFloating.querySelector('small').innerText = message;
@@ -139,41 +155,33 @@ function setError(input, message) {
 
 // Exibe um layot e mensagem de sucesso para uma input
 function setSuccess(input) {
-	switch(input) {
-		case name:
-			nameOk = true;
-			break;
-		case email:
-			emailOk = true;
-			break;
-		case password:
-			passwordOk = true;
-			break;
-		case passwordConfirm:
-			passwordConfirmOk = true;
-			break;
-	}
+	validateInput(input, true);
 	input.parentElement.className = 'form-floating success';
 }
 
 // Reseta uma input, removendo o texto e layot de erro/sucesso
 function resetInput(input) {
-	switch(input) {
-		case name:
-			nameOk = false;
-			break;
-		case email:
-			emailOk = false;
-			break;
-		case password:
-			passwordOk = false;
-			break;
-		case passwordConfirm:
-			passwordConfirmOk = false;
-			break;
-	}
+	validateInput(input, false);
 	input.value = '';
 	input.parentElement.className = 'form-floating';
+}
+
+// Valida ou invalida uma input
+function validateInput(input, bool) {
+	switch(input) {
+		case name:
+			nameOk = bool;
+			break;
+		case email:
+			emailOk = bool;
+			break;
+		case password:
+			passwordOk = bool;
+			break;
+		case passwordConfirm:
+			passwordConfirmOk = bool;
+			break;
+	}
 }
 
 // Reseta o texto e layot de todas as inputs
@@ -196,24 +204,20 @@ function checkEmail(email) {
 }
 
 // Requisição POST
-function postRequest(name, email, password) {
-	var http = new XMLHttpRequest();
-	var url = 'http://localhost:3000/register';
-	var params = encodeURIComponent('name') + '=' + encodeURIComponent(name) + '&' +
-				encodeURIComponent('email') + '=' + encodeURIComponent(email) + '&' +
-				encodeURIComponent('password') + '=' + encodeURIComponent(password);
-	http.open('POST', url, true);
-
-	// Recebe o status da resposta do servdidor
-	http.onreadystatechange = function() {
-		if(http.readyState == 4) {
-			if(http.status == 201) {
-				setRegisterSuccess();
-			} else {
-				setRegisterError('Ocorreu um erro durante o cadastro, atualize a página e tente novamente.');
-			}
-		}
+function postRequest(params) {
+	const form = document.createElement('form');
+	form.method = 'POST';
+	form.action = '/register';
+  
+	for (const key in params) {
+	  if (params.hasOwnProperty(key)) {
+		const hiddenField = document.createElement('input');
+		hiddenField.type = 'hidden';
+		hiddenField.name = key;
+		hiddenField.value = params[key];
+		form.appendChild(hiddenField);
+	  }
 	}
-	http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-	http.send(params);
-}
+	document.body.appendChild(form);
+	form.submit();
+  }

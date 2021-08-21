@@ -1,8 +1,16 @@
+const auth = JSON.parse(document.currentScript.getAttribute('auth'));
+const error = JSON.parse(document.currentScript.getAttribute('error'));
 const alert = document.getElementById('alert');
 const form = document.getElementById('form');
 const email = document.getElementById('email');
 const password = document.getElementById('password');
 const loginButton = document.getElementById('loginButton');
+
+if(auth) {
+	setError('E-mail e/ou senha inválidos.');
+} else if(error) {
+	setError('E-mail e/ou senha inválidos.');
+}
 
 form.onsubmit = function (event) {
 	event.preventDefault();
@@ -27,7 +35,7 @@ async function checkCredentials() {
 	} else if(passwordValue === '') {
         setError('Digite sua senha.');
     } else {
-        postRequest(emailValue, passwordValue);
+        postRequest({email: emailValue, password: passwordValue});
 	}
 }
 
@@ -54,31 +62,20 @@ function checkEmail(email) {
 }
 
 // Requisição POST
-function postRequest(email, password) {
-	var http = new XMLHttpRequest();
-	var url = 'http://localhost:3000/';
-	var params = encodeURIComponent('email') + '=' + encodeURIComponent(email) + '&' +
-				encodeURIComponent('password') + '=' + encodeURIComponent(password);
-	http.open('POST', url, true);
-	http.withCredentials = true;
-
-	// Recebe o status da resposta do servdidor
-	http.onreadystatechange = function() {
-		if(http.readyState == 4) {
-			if(http.status == 200) {
-				window.location.href = '/voting';
-			} else if(http.status == 202) {
-				window.location.href = '/computed';
-			} else if(http.status == 401) {
-				resetPassword();
-				setError('E-mail e/ou senha inválido(s).');
-			} else {
-				resetAllInputs();
-				loginButton.disabled = true;
-				setError('Ocorreu um erro durante o login, atualize a página e tente novamente.');
-			}
-		}
+function postRequest(params) {
+	const form = document.createElement('form');
+	form.method = 'POST';
+	form.action = '/';
+  
+	for (const key in params) {
+	  if (params.hasOwnProperty(key)) {
+		const hiddenField = document.createElement('input');
+		hiddenField.type = 'hidden';
+		hiddenField.name = key;
+		hiddenField.value = params[key];
+		form.appendChild(hiddenField);
+	  }
 	}
-	http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	http.send(params);
-}
+	document.body.appendChild(form);
+	form.submit();
+  }

@@ -20,8 +20,8 @@ app.use(express.json());
 app.use(session({secret:'1fh6a4ffalf9g7s5hfks7r6rwjwldfhhh7', name:'uniqueSessionID', saveUninitialized: false}));
 
 // Requisições GET
-app.get('/', (req, res) => res.render('index'));
-app.get('/register', (req, res) => res.render('register', {usersEmail: JSON.stringify(getUsersEmail())}));
+app.get('/', (req, res) => res.render('index', {auth: false, error: false}));
+app.get('/register', (req, res) => res.render('register', {registeredUser: false, error: false, usersEmail: JSON.stringify(getUsersEmail())}));
 app.get('/voting', (req, res) => {
     if(req.session.loggedIn) {
         res.render('voting', {userEmail: req.session.email});
@@ -43,35 +43,42 @@ app.get('/logout', (req, res) => {
 });
 
 // Requisições POST
-app.post('/', async (req, res) => {
+app.post('/', async (req, res, next) => {
     const { email, password } = req.body;
     const vote = await requestLogin(email, password);
+    // Usuário autenticado, não votou
     if(vote == 0) {
         req.session.loggedIn = true;
         req.session.email = email;
-        res.status(200).json({message: 'Usuário autenticado, não votou'});
+        res.status(200).render('voting', {userEmail: email});
+    // Usuário autenticado, já votou
     } else if(vote == 1) {
         req.session.loggedIn = true
         req.session.email = email;
-        res.status(202).json({message: 'Usuário autenticado, já votou'});
+        res.status(202).render('computed');
     } else if(vote == 2) {
-        res.status(401).json({message: 'Credenciais inválidas.'});
+        // E-mail e/ou senha incorretos
+        res.status(401).render('index', {auth: true, error: false});
     } else {
-        res.status(500).json({message: 'Ocorreu um erro durante a requisição de login, tente atualizar a página.'});
+        res.status(500).render('index', {auth: false, error: true});
     }
 });
 app.post('/register', async (req, res) => {
     if(await createUser(req.body)) {
-        res.status(201).json({message: 'Usuário cadastrado com sucesso'});
+        // Usuário cadastrado com sucesso
+        res.status(201).render('register', {registeredUser: true, error: false, usersEmail: JSON.stringify(getUsersEmail())});
     } else {
-        res.status(500).json({message: 'Erro durante o cadastro do usuário no banco'});
+        res.status(500).render('register', {registeredUser: false, error: true, usersEmail: null});
     }
 });
 app.post('/vote', async (req, res) => {
     if(await computeVote(req.body)) {
-        res.status(200).json({message: 'Voto computado com sucesso'});
+        // Voto computado com sucesso
+        res.status(200).render('computed');
     } else {
-        res.status(400).json({message: 'Este usuário já votou'});
+        // Este usuário já votou, redirecionando para a tela de login
+        req.session.destroy();
+        res.redirect('/');
     }
 });
 

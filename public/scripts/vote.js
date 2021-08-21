@@ -5,38 +5,34 @@ const olimpiaButton = document.getElementById('olimpiaButton');
 
 jardinButton.onclick = function () {
 	// Usuário votou no empreendimento 1 - Le Jardin
-	postRequest(1);
+	postRequest({userEmail: userEmail, enterpriseId: 1});
 }
 
 evianButton.onclick = function () {
 	// Usuário votou no empreendimento 2 - Evian
-	postRequest(2);
+	postRequest({userEmail: userEmail, enterpriseId: 2});
 }
 
 olimpiaButton.onclick = function () {
 	// Usuário votou no empreendimento 3 - Olímpia Thermas
-	postRequest(3);
+	postRequest({userEmail: userEmail, enterpriseId: 3});
 }
 
 // Requisição POST
-function postRequest(enterpriseId) {
-	var http = new XMLHttpRequest();
-	var url = 'http://localhost:3000/vote';
-	var params = encodeURIComponent('userEmail') + '=' + encodeURIComponent(userEmail) + '&' +
-				encodeURIComponent('enterpriseId') + '=' + encodeURIComponent(enterpriseId);
-	http.open('POST', url, true);
-    http.withCredentials = true;
-
-	// Recebe o status da resposta do servdidor
-	http.onreadystatechange = function() {
-		if(http.readyState == 4) {
-			if(http.status == 200) {
-				window.location.href = '/computed';
-			} else {
-				window.location.href = '/logout';
-			}
-		}
+function postRequest(params) {
+	const form = document.createElement('form');
+	form.method = 'POST';
+	form.action = '/vote';
+  
+	for (const key in params) {
+	  if (params.hasOwnProperty(key)) {
+		const hiddenField = document.createElement('input');
+		hiddenField.type = 'hidden';
+		hiddenField.name = key;
+		hiddenField.value = params[key];
+		form.appendChild(hiddenField);
+	  }
 	}
-	http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-	http.send(params);
-}
+	document.body.appendChild(form);
+	form.submit();
+  }

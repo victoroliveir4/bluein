@@ -4,12 +4,13 @@ import { Enterprise } from '../api/models/enterprise.js'
 
 // Cria conexão com o banco de dados
 const db = mysql.createConnection({
-    host: 'mysql-container',
+    host: 'localhost',
     user: 'root',
     password: 'bluein',
     database: 'bluein'
 });
 
+// Se conecta ao banco de dados
 db.connect((error) => {
     if(error) {
         throw('MYSQL Error: ', error);
@@ -123,16 +124,16 @@ export async function computeVote(data) {
             db.query('UPDATE enterprises SET votes = ? WHERE id = ?', [enterprise.votes, enterpriseId], (error) => {
                 if(error) {
                     console.log('Enterprise Update Error: ', error);
-                    resolve(false);
+                    return resolve(false);
                 }
             });
             db.query('UPDATE users SET vote = ?, enterpriseId = ?, vote_date = ? WHERE email = ?', [true, enterpriseId, user.vote_date, userEmail], (error) => {
                 if(error) {
                     console.log('User Update Error: ', error);
-                    resolve(false);
+                    return resolve(false);
                 } else {
                     console.log(`User with e-mail ${userEmail} just voted, database updated.`);
-                    resolve(true);
+                    return resolve(true);
                 }
             });
         });
