@@ -2,31 +2,34 @@
 
 Votação de Empreendimentos
 
-# DOCKER COMMANDS
+# Dependências
 
-# Build node-image
+Para a execução do projeto tenha instalado em sua máquina as dependências abaixo:
+- node (https://nodejs.org/en/download/)
+- docker (https://docs.docker.com/get-docker/)
+- docker-compose (https://docs.docker.com/compose/install/)
 
-docker build -t node-image .
+# Executando o projeto
 
-# Build mysql-image
+Após realizar o download deste repositório, execute os seguintes comandos dentro da pasta raiz do projeto:
 
-docker build -t mysql-image -f db/Dockerfile .
+Suba os containers do servidor Node e do banco MYSQL:
+$ docker-compose up -d
 
-# Run docker compose
+Pare o container do servidor Node para criar o database no banco:
+$ docker stop node-container
 
-docker-compose up -d
+Execute o script que insere o database:
+$ docker exec -i mysql-container mysql -uroot -pbluein < db/create.sql
 
-# Run MYSQL script
+Suba novamente o container do servidor:
+$ docker start node-container
 
-docker exec -i mysql-container mysql -uroot -pbluein < db/create.sql
+Pronto! Agora basta acessar a aplicação localmente:
+http://localhost:3000
 
-# Bash mysql-container
 
-docker exec -it mysql-container /bin/bash
+# Bash container
 
-# Docker mahine with AWS
-
-docker-machine create --driver amazonec2 aws01
-docker-machine env aws01
-docker-compose -f docker-compose.yml -f docker-production.yml up -d
+$ docker exec -it container-name /bin/bash
 
