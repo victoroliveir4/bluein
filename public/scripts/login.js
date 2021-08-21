@@ -9,7 +9,8 @@ const loginButton = document.getElementById('loginButton');
 if(auth) {
 	setError('E-mail e/ou senha inválidos.');
 } else if(error) {
-	setError('E-mail e/ou senha inválidos.');
+	loginButton.disabled = true;
+	setError('Ocorreu um erro na tentativa de login, recarregue a página e tente novamente.');
 }
 
 form.onsubmit = function (event) {
@@ -17,7 +18,7 @@ form.onsubmit = function (event) {
 	checkCredentials();
 }
 
-// Verifica se as credenciais do usuário são válidas, antes de solicitar um POST
+// Verifica se as credenciais do usuário são válidas, antes da requisição
 async function checkCredentials() {
 	const emailValue = email.value.trim();
 	const passwordValue = password.value.trim();

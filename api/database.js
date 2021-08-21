@@ -124,43 +124,43 @@ export async function computeVote(data) {
             db.query('UPDATE enterprises SET votes = ? WHERE id = ?', [enterprise.votes, enterpriseId], (error) => {
                 if(error) {
                     console.log('Enterprise Update Error: ', error);
-                    return resolve(false);
+                    return resolve(3);
                 }
             });
             db.query('UPDATE users SET vote = ?, enterpriseId = ?, vote_date = ? WHERE email = ?', [true, enterpriseId, user.vote_date, userEmail], (error) => {
                 if(error) {
                     console.log('User Update Error: ', error);
-                    return resolve(false);
+                    return resolve(3);
                 } else {
                     console.log(`User with e-mail ${userEmail} just voted, database updated.`);
-                    return resolve(true);
+                    return resolve(1);
                 }
             });
         });
     } else {
         // Este usuário já votou
-        return false;
+        return 2;
     }
 }
 
 // Retorna todos os dados necessários do resultado parcial da votação
 export function getResult() {
-    const result = new Object();
-    result.jardinVotes = enterprises[0].votes;
-    result.evianVotes = enterprises[1].votes;
-    result.olimpiaVotes = enterprises[2].votes;
-    result.totalVotes = result.jardinVotes + result.evianVotes + result.olimpiaVotes;
-    result.whoVoted = whoVoted;
-    return result;
+    return {
+        jardinVotes: enterprises[0].votes,
+        evianVotes: enterprises[1].votes,
+        olimpiaVotes: enterprises[2].votes,
+        totalVotes: enterprises[0].votes + enterprises[1].votes + enterprises[2].votes,
+        whoVoted: whoVoted
+    };
 }
 
 // Retorna a data corrente formatada (dd/MM/aaaa)
 function getDate(){
     var data = new Date(),
         dia  = data.getDate().toString(),
-        diaF = (dia.length == 1) ? '0'+dia : dia,
+        diaF = (dia.length == 1) ? '0' + dia : dia,
         mes  = (data.getMonth()+1).toString(),
-        mesF = (mes.length == 1) ? '0'+mes : mes,
+        mesF = (mes.length == 1) ? '0' + mes : mes,
         anoF = data.getFullYear();
-    return diaF+"/"+mesF+"/"+anoF;
+    return diaF + "/" + mesF + "/" + anoF;
 }

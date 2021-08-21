@@ -25,9 +25,11 @@
             </div>
         </nav>
 
-        <main id="main" style="text-align: center;">
-            <h1 style="margin-top: 20px; margin-left: 50px; margin-bottom: 50px;">Seu voto já foi computado!</h1>
-            <h2 style="margin-top: 20px; margin-left: 50px; margin-bottom: 50px;">Aguarde o término da votação para mais informações...</h2>
+        <main style="text-align: center;">
+            <h1 id="h1" style="margin-top: 20px; margin-left: 50px; margin-bottom: 50px;">Voto computado com sucesso!</h1>
+            <h2 id="h2" style="margin-top: 20px; margin-left: 50px; margin-bottom: 50px;">Aguarde o término da votação para mais informações...</h2>
         </main>
+
+        <script src="scripts/computed.js" computeResult="<%= computeResult %>"></script>
     </body>
 </html>

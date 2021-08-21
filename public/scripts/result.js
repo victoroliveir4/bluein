@@ -1,4 +1,4 @@
-const result = document.currentScript.getAttribute('result');
+const resultData = JSON.parse(document.currentScript.getAttribute('resultData'));
 const totalVotesElement = document.getElementById('totalVotes');
 const jardinVotesElement = document.getElementById('jardinVotes');
 const evianVotesElement = document.getElementById('evianVotes');
@@ -10,8 +10,7 @@ const tableWhoVoted = document.getElementById("whoVoted");
 const searchInput = document.getElementById("searchInput");
 const tr = tableWhoVoted.getElementsByTagName("tr");
 
-const resultJson = JSON.parse(result);
-const { jardinVotes, evianVotes, olimpiaVotes, totalVotes, whoVoted} = resultJson;
+const { jardinVotes, evianVotes, olimpiaVotes, totalVotes, whoVoted} = resultData;
 
 totalVotesElement.innerText = 'Total: ' + totalVotes + (totalVotes != 1 ? ' votos' : ' voto');
 jardinVotesElement.innerText = jardinVotes + (jardinVotes != 1 ? ' votos' : ' voto');

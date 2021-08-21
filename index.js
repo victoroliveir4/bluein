@@ -24,7 +24,11 @@ app.get('/', (req, res) => res.render('index', {auth: false, error: false}));
 app.get('/register', (req, res) => res.render('register', {registeredUser: false, error: false, usersEmail: JSON.stringify(getUsersEmail())}));
 app.get('/voting', (req, res) => {
     if(req.session.loggedIn) {
-        res.render('voting', {userEmail: req.session.email});
+        if(req.session.vote) {
+            res.redirect('computed');
+        } else {
+            res.render('voting', {userEmail: req.session.email});
+        }
     } else {
         res.redirect('/');
     }
@@ -36,7 +40,7 @@ app.get('/computed', (req, res) => {
         res.redirect('/');
     }
 });
-app.get('/result', (req, res) => res.render('result', res.render('result', {result: JSON.stringify(getResult())})));
+app.get('/result', (req, res) => res.render('result', {resultData: JSON.stringify(getResult())}));
 app.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/');
@@ -55,11 +59,12 @@ app.post('/', async (req, res, next) => {
     } else if(vote == 1) {
         req.session.loggedIn = true
         req.session.email = email;
-        res.status(202).render('computed');
+        res.status(202).render('computed', {computeResult: 2});
     } else if(vote == 2) {
         // E-mail e/ou senha incorretos
         res.status(401).render('index', {auth: true, error: false});
     } else {
+        // Ocorreu um erro no servidor durante a autenticação
         res.status(500).render('index', {auth: false, error: true});
     }
 });
@@ -68,17 +73,22 @@ app.post('/register', async (req, res) => {
         // Usuário cadastrado com sucesso
         res.status(201).render('register', {registeredUser: true, error: false, usersEmail: JSON.stringify(getUsersEmail())});
     } else {
+        // Ocorreu um erro no servidor durante o cadastro do usuário
         res.status(500).render('register', {registeredUser: false, error: true, usersEmail: null});
     }
 });
 app.post('/vote', async (req, res) => {
-    if(await computeVote(req.body)) {
+    let computeResult = await computeVote(req.body);
+    if(computeResult == 1) {
         // Voto computado com sucesso
-        res.status(200).render('computed');
+        req.session.vote = true;
+        res.status(200).render('computed', {computeResult: 1});
+    } else if(computeResult == 2) {
+        // Este usuário já votou
+        res.status(202).render('computed', {computeResult: 2});
     } else {
-        // Este usuário já votou, redirecionando para a tela de login
-        req.session.destroy();
-        res.redirect('/');
+        // Ocorreu um erro no servidor durante a computação do voto
+        res.status(500).render('computed', {computeResult: 3});
     }
 });
 
